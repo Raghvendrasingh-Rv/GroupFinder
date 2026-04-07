@@ -1,0 +1,19 @@
+export const HTTP_STATUS = {
+  OK: 200,
+  CREATED: 201,
+  BAD_REQUEST: 400,
+  UNAUTHORIZED: 401,
+  FORBIDDEN: 403,
+  NOT_FOUND: 404,
+  CONFLICT: 409,
+  UNPROCESSABLE_ENTITY: 422,
+  NOT_IMPLEMENTED: 501,
+  INTERNAL_SERVER_ERROR: 500
+} as const;
+
+export const RESPONSE_MESSAGE = {
+  SUCCESS: "Success",
+  ERROR: "Error",
+  INTERNAL_SERVER_ERROR: "Internal Server Error",
+  ROUTE_NOT_FOUND: "Route not found"
+} as const;
