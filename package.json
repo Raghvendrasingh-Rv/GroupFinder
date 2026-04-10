@@ -5,14 +5,15 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon",
-    "build": "tsc",
+    "build": "prisma generate && tsc",
     "start": "node dist/server.js",
     "db:push": "prisma db push",
     "db:sync": "prisma db push && prisma generate",
     "db:generate": "prisma generate",
     "docs:openapi": "node scripts/export-openapi.mjs",
     "lint": "eslint . --ext .ts",
-    "seed": "ts-node prisma/seed.ts"
+    "seed": "ts-node prisma/seed.ts",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.5.0",
