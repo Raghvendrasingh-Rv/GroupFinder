@@ -9,6 +9,7 @@
     "start": "node dist/server.js",
     "db:push": "prisma db push",
     "db:sync": "prisma db push && prisma generate",
+    "db:migrate": "prisma migrate deploy && prisma generate",
     "db:generate": "prisma generate",
     "docs:openapi": "node scripts/export-openapi.mjs",
     "lint": "eslint . --ext .ts",
