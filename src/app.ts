@@ -3,6 +3,7 @@ import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
 import swaggerUi from "swagger-ui-express";
+import { env } from "./config/env.js";
 import { swaggerSpec } from "./config/swagger.js";
 import { apiRouter } from "./routes/index.js";
 import { notFoundHandler } from "./common/middleware/notFoundHandler.js";
@@ -10,8 +11,30 @@ import { errorMiddleware } from "./common/middleware/error.middleware.js";
 
 export const app = express();
 
+const allowedOrigins = [
+  env.FRONTEND_URL,
+  env.CORS_ORIGIN,
+  "http://localhost:3000",
+  "http://localhost:4000",
+  "http://localhost:8000",
+  "http://127.0.0.1:3000",
+  "http://127.0.0.1:4000",
+  "http://127.0.0.1:8000"
+].filter((origin): origin is string => Boolean(origin));
+
 app.use(express.json());
-app.use(cors());
+app.use(
+  cors({
+    origin(origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+
+      return callback(new Error(`CORS blocked for origin: ${origin}`));
+    },
+    credentials: true
+  })
+);
 app.use(helmet());
 app.use(morgan("dev"));
 app.use(express.urlencoded({ extended: true }));

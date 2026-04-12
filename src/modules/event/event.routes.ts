@@ -18,7 +18,9 @@ const createEventSchema = z.object({
   eventTime: z.string().min(1, "eventTime is required"),
   maxParticipants: z.coerce.number().int().positive("maxParticipants must be a positive integer")
 });
+
 /**
+ * 
  * @openapi
  * /events:
  *   post:

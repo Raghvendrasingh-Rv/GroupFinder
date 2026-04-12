@@ -10,6 +10,8 @@ const envSchema = z.object({
   // App
   NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
   PORT: z.coerce.number().int().positive().default(4000),
+  FRONTEND_URL: z.preprocess(emptyStringToUndefined, z.string().optional()),
+  CORS_ORIGIN: z.preprocess(emptyStringToUndefined, z.string().optional()),
 
   // Auth
   JWT_SECRET: z.string().min(1),
