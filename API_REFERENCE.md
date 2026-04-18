@@ -169,8 +169,7 @@ Request body:
   "category": "Tech",
   "title": "React Builders Meetup",
   "description": "A meetup for frontend enthusiasts.",
-  "latitude": 12.9716,
-  "longitude": 77.5946,
+  "eventAddress": "Koramangala, Bengaluru",
   "eventDate": "2026-04-10",
   "eventTime": "10:00",
   "maxParticipants": 30
@@ -189,8 +188,7 @@ Success response:
     "category": "Tech",
     "title": "React Builders Meetup",
     "description": "A meetup for frontend enthusiasts.",
-    "latitude": 12.9716,
-    "longitude": 77.5946,
+    "eventAddress": "Koramangala, Bengaluru",
     "eventDate": "2026-04-10T00:00:00.000Z",
     "eventTime": "10:00",
     "maxParticipants": 30,
@@ -212,9 +210,6 @@ Query params:
 ```text
 limit=10
 offset=0
-latitude=12.9716
-longitude=77.5946
-radius=5
 ```
 
 Response:
@@ -229,8 +224,7 @@ Response:
       "category": "Tech",
       "title": "React Builders Meetup",
       "description": "A meetup for frontend enthusiasts.",
-      "latitude": 12.9716,
-      "longitude": 77.5946,
+      "eventAddress": "Koramangala, Bengaluru",
       "eventDate": "2026-04-10T00:00:00.000Z",
       "eventTime": "10:00",
       "maxParticipants": 30,
@@ -277,8 +271,7 @@ Response:
       "category": "Tech",
       "title": "React Builders Meetup",
       "description": "A meetup for frontend enthusiasts.",
-      "latitude": 12.9716,
-      "longitude": 77.5946,
+      "eventAddress": "Koramangala, Bengaluru",
       "eventDate": "2026-04-10T00:00:00.000Z",
       "eventTime": "10:00",
       "maxParticipants": 30,
@@ -354,17 +347,16 @@ Response:
 ```json
 {
   "success": true,
-  "data": {
-    "id": "event-uuid",
-    "creatorId": "user-uuid",
-    "category": "Tech",
-    "title": "React Builders Meetup",
-    "description": "A meetup for frontend enthusiasts.",
-    "latitude": 12.9716,
-    "longitude": 77.5946,
-    "eventDate": "2026-04-10T00:00:00.000Z",
-    "eventTime": "10:00",
-    "maxParticipants": 30,
+    "data": {
+      "id": "event-uuid",
+      "creatorId": "user-uuid",
+      "category": "Tech",
+      "title": "React Builders Meetup",
+      "description": "A meetup for frontend enthusiasts.",
+      "eventAddress": "Koramangala, Bengaluru",
+      "eventDate": "2026-04-10T00:00:00.000Z",
+      "eventTime": "10:00",
+      "maxParticipants": 30,
     "currentParticipants": 0,
     "status": "ACTIVE",
     "createdAt": "2026-04-12T10:00:00.000Z"
@@ -435,8 +427,7 @@ Success response:
       "category": "Tech",
       "title": "React Builders Meetup",
       "description": "A meetup for frontend enthusiasts.",
-      "latitude": 12.9716,
-      "longitude": 77.5946,
+      "eventAddress": "Koramangala, Bengaluru",
       "eventDate": "2026-04-10T00:00:00.000Z",
       "eventTime": "10:00",
       "maxParticipants": 30,
@@ -494,4 +485,3 @@ Examples:
 - `404 Not Found`
 - `409 Conflict`
 - `500 Internal Server Error`
-

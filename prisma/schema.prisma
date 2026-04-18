@@ -26,8 +26,7 @@ model Event {
   category            String
   title               String
   description         String
-  latitude            Float
-  longitude           Float
+  eventAddress        String
   eventDate           DateTime
   eventTime           String
   maxParticipants     Int

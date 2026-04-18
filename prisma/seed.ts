@@ -41,8 +41,7 @@ async function main() {
         category: "Tech",
         title: "React Builders Meetup",
         description: "A meetup for React and frontend enthusiasts.",
-        latitude: 12.9716,
-        longitude: 77.5946,
+        eventAddress: "Koramangala, Bengaluru",
         eventDate: new Date("2026-04-10T00:00:00.000Z"),
         eventTime: "10:00",
         maxParticipants: 30
@@ -54,8 +53,7 @@ async function main() {
         category: "Startup",
         title: "Founder Coffee Chat",
         description: "Casual conversations about startup building.",
-        latitude: 12.9352,
-        longitude: 77.6245,
+        eventAddress: "Indiranagar, Bengaluru",
         eventDate: new Date("2026-04-12T00:00:00.000Z"),
         eventTime: "09:30",
         maxParticipants: 20
@@ -67,8 +65,7 @@ async function main() {
         category: "Sports",
         title: "Sunday Football",
         description: "Friendly football match in the morning.",
-        latitude: 12.9279,
-        longitude: 77.6271,
+        eventAddress: "HSR Layout, Bengaluru",
         eventDate: new Date("2026-04-13T00:00:00.000Z"),
         eventTime: "07:00",
         maxParticipants: 22
@@ -80,8 +77,7 @@ async function main() {
         category: "Music",
         title: "Open Mic Night",
         description: "Poetry, music, and performances.",
-        latitude: 12.9718,
-        longitude: 77.6412,
+        eventAddress: "Whitefield, Bengaluru",
         eventDate: new Date("2026-04-14T00:00:00.000Z"),
         eventTime: "18:30",
         maxParticipants: 50
@@ -93,8 +89,7 @@ async function main() {
         category: "Food",
         title: "Street Food Walk",
         description: "Explore local food spots together.",
-        latitude: 12.9081,
-        longitude: 77.6476,
+        eventAddress: "Jayanagar, Bengaluru",
         eventDate: new Date("2026-04-15T00:00:00.000Z"),
         eventTime: "19:00",
         maxParticipants: 15
@@ -106,8 +101,7 @@ async function main() {
         category: "Education",
         title: "AI Study Circle",
         description: "Learn and share AI resources.",
-        latitude: 12.9611,
-        longitude: 77.6387,
+        eventAddress: "Malleshwaram, Bengaluru",
         eventDate: new Date("2026-04-16T00:00:00.000Z"),
         eventTime: "16:00",
         maxParticipants: 12
@@ -119,8 +113,7 @@ async function main() {
         category: "Wellness",
         title: "Morning Yoga",
         description: "Beginner-friendly yoga session.",
-        latitude: 12.9245,
-        longitude: 77.6101,
+        eventAddress: "JP Nagar, Bengaluru",
         eventDate: new Date("2026-04-17T00:00:00.000Z"),
         eventTime: "06:30",
         maxParticipants: 25
@@ -132,8 +125,7 @@ async function main() {
         category: "Art",
         title: "Sketch in the Park",
         description: "Outdoor sketching and creative time.",
-        latitude: 12.9481,
-        longitude: 77.5828,
+        eventAddress: "Cubbon Park, Bengaluru",
         eventDate: new Date("2026-04-18T00:00:00.000Z"),
         eventTime: "15:00",
         maxParticipants: 18
@@ -145,8 +137,7 @@ async function main() {
         category: "Networking",
         title: "Product People Mixer",
         description: "Meet product managers and designers.",
-        latitude: 12.9901,
-        longitude: 77.639,
+        eventAddress: "MG Road, Bengaluru",
         eventDate: new Date("2026-04-19T00:00:00.000Z"),
         eventTime: "17:00",
         maxParticipants: 40
@@ -158,8 +149,7 @@ async function main() {
         category: "Travel",
         title: "Weekend Trek Planning",
         description: "Plan a weekend trek with the group.",
-        latitude: 12.9165,
-        longitude: 77.6103,
+        eventAddress: "Banashankari, Bengaluru",
         eventDate: new Date("2026-04-20T00:00:00.000Z"),
         eventTime: "11:00",
         maxParticipants: 10

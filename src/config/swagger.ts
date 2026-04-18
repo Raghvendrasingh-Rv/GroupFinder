@@ -123,13 +123,12 @@ const swaggerDefinition = {
       },
       CreateEventRequest: {
         type: "object",
-        required: ["category", "title", "description", "latitude", "longitude", "eventDate", "eventTime", "maxParticipants"],
+        required: ["category", "title", "description", "eventAddress", "eventDate", "eventTime", "maxParticipants"],
         properties: {
           category: { type: "string", example: "Tech" },
           title: { type: "string", example: "React Builders Meetup" },
           description: { type: "string", example: "A meetup for frontend enthusiasts." },
-          latitude: { type: "number", example: 12.9716 },
-          longitude: { type: "number", example: 77.5946 },
+          eventAddress: { type: "string", example: "Koramangala, Bengaluru" },
           eventDate: { type: "string", example: "2026-04-10" },
           eventTime: { type: "string", example: "10:00" },
           maxParticipants: { type: "integer", example: 30 }
@@ -151,8 +150,7 @@ const swaggerDefinition = {
           category: { type: "string" },
           title: { type: "string" },
           description: { type: "string" },
-          latitude: { type: "number" },
-          longitude: { type: "number" },
+          eventAddress: { type: "string" },
           eventDate: { type: "string", format: "date" },
           eventTime: { type: "string" },
           maxParticipants: { type: "integer" },
@@ -180,13 +178,13 @@ const swaggerDefinition = {
                   { type: "null" },
                   {
                     type: "object",
-                    properties: {
-                      latitude: { type: "number", example: 12.9716 },
-                      longitude: { type: "number", example: 77.5946 },
-                      radius: { type: "number", example: 5 }
-                    }
+              properties: {
+                    latitude: { type: "number", example: 12.9716 },
+                    longitude: { type: "number", example: 77.5946 },
+                    radius: { type: "number", example: 5 }
                   }
-                ]
+                }
+              ]
               }
             }
           },

@@ -12,8 +12,7 @@ const createEventSchema = z.object({
   category: z.string().min(1, "Category is required"),
   title: z.string().min(1, "Title is required"),
   description: z.string().min(1, "Description is required"),
-  latitude: z.coerce.number().finite("Latitude must be a valid number"),
-  longitude: z.coerce.number().finite("Longitude must be a valid number"),
+  eventAddress: z.string().min(1, "eventAddress is required"),
   eventDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "eventDate must be in YYYY-MM-DD format"),
   eventTime: z.string().min(1, "eventTime is required"),
   maxParticipants: z.coerce.number().int().positive("maxParticipants must be a positive integer")
