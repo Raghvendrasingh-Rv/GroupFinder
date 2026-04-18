@@ -11,6 +11,10 @@ import { errorMiddleware } from "./common/middleware/error.middleware.js";
 
 export const app = express();
 
+function normalizeOrigin(origin?: string | null) {
+  return origin?.trim().replace(/\/$/, "");
+}
+
 const allowedOrigins = [
   env.FRONTEND_URL,
   env.CORS_ORIGIN,
@@ -20,13 +24,15 @@ const allowedOrigins = [
   "http://127.0.0.1:3000",
   "http://127.0.0.1:4000",
   "http://127.0.0.1:8000"
-].filter((origin): origin is string => Boolean(origin));
+].map((origin) => normalizeOrigin(origin)).filter((origin): origin is string => Boolean(origin));
 
 app.use(express.json());
 app.use(
   cors({
     origin(origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
+      const normalizedOrigin = normalizeOrigin(origin);
+
+      if (!normalizedOrigin || allowedOrigins.includes(normalizedOrigin)) {
         return callback(null, true);
       }
 
