@@ -5,6 +5,8 @@ import { testRedisConnection } from "./config/redis.js";
 const PORT = env.PORT;
 
 async function start() {
+  console.log(`Email provider: ${env.EMAIL_PROVIDER}`);
+
   if (env.OTP_STORE === "redis") {
     const pong = await testRedisConnection();
     console.log(`Redis connected: ${pong}`);

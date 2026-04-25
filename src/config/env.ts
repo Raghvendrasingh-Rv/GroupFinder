@@ -31,8 +31,12 @@ const envSchema = z.object({
   REDIS_PASSWORD: z.preprocess(emptyStringToUndefined, z.string().optional()),
 
   // Email
+  EMAIL_PROVIDER: z.enum(["resend", "gmail"]).default("resend"),
   RESEND_API_KEY: z.preprocess(emptyStringToUndefined, z.string().optional()),
-  RESEND_FROM: z.preprocess(emptyStringToUndefined, z.string().optional())
+  RESEND_FROM: z.preprocess(emptyStringToUndefined, z.string().optional()),
+  GMAIL_USER: z.preprocess(emptyStringToUndefined, z.string().optional()),
+  GMAIL_APP_PASSWORD: z.preprocess(emptyStringToUndefined, z.string().optional()),
+  GMAIL_FROM: z.preprocess(emptyStringToUndefined, z.string().optional())
 });
 
 export const env = envSchema.parse(process.env);
