@@ -85,10 +85,6 @@ class EventService {
     const category = normalizeString(filters.category);
     const timing = normalizeString(filters.timing)?.toLowerCase();
 
-    if (!category && !timing) {
-      throw new AppError("At least one of category or timing is required", HTTP_STATUS.BAD_REQUEST);
-    }
-
     if (timing && !["today", "upcoming"].includes(timing)) {
       throw new AppError("Timing must be either today or upcoming", HTTP_STATUS.BAD_REQUEST);
     }
