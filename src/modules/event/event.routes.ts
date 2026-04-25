@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { authMiddleware } from "../../common/middleware/auth.middleware.js";
 import { validate } from "../../common/middleware/validation.middleware.js";
-import { createEvent, getEventById, getEvents, getEventsByCategory, getEventsByTiming } from "./event.controller.js";
+import { createEvent, getEventById, getEvents } from "./event.controller.js";
 import { z } from "zod";
 
 export const eventRouter = Router();
@@ -47,11 +47,23 @@ eventRouter.post("/", validate(createEventSchema), createEvent);
  * @openapi
  * /events:
  *   get:
- *     summary: Get all events
+ *     summary: Get events
  *     tags:
  *       - Events
  *     security:
  *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: category
+ *         required: false
+ *         schema:
+ *           type: string
+ *       - in: query
+ *         name: timing
+ *         required: false
+ *         schema:
+ *           type: string
+ *           enum: [today, upcoming]
  *     responses:
  *       200:
  *         description: List of events
@@ -59,57 +71,10 @@ eventRouter.post("/", validate(createEventSchema), createEvent);
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/EventListResponse'
+ *       400:
+ *         description: At least one filter is required
  */
 eventRouter.get("/", getEvents);
-/**
- * @openapi
- * /events/category/{category}:
- *   get:
- *     summary: Get events by category
- *     tags:
- *       - Events
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: category
- *         required: true
- *         schema:
- *           type: string
- *     responses:
- *       200:
- *         description: List of events for a category
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/EventByCategoryResponse'
- */
-eventRouter.get("/category/:category", getEventsByCategory);
-/**
- * @openapi
- * /events/timing/{timing}:
- *   get:
- *     summary: Get events by timing
- *     tags:
- *       - Events
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: timing
- *         required: true
- *         schema:
- *           type: string
- *           enum: [today, upcoming]
- *     responses:
- *       200:
- *         description: Events for the selected timing bucket
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/EventByTimingResponse'
- */
-eventRouter.get("/timing/:timing", getEventsByTiming);
 /**
  * @openapi
  * /events/{id}:

@@ -37,21 +37,3 @@ export async function getEventById(req: Request, res: Response, next: NextFuncti
     next(error);
   }
 }
-
-export async function getEventsByCategory(req: Request, res: Response, next: NextFunction) {
-  try {
-    const result = await eventService.getEventsByCategory(req.params.category as string | undefined);
-    res.status(200).json(result);
-  } catch (error) {
-    next(error);
-  }
-}
-
-export async function getEventsByTiming(req: Request, res: Response, next: NextFunction) {
-  try {
-    const result = await eventService.getEventsByTiming(req.params.timing as string | undefined);
-    res.status(200).json(result);
-  } catch (error) {
-    next(error);
-  }
-}

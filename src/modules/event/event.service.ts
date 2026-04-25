@@ -17,6 +17,8 @@ export type CreateEventDTO = {
 export type EventFiltersDTO = {
   limit?: string | number;
   offset?: string | number;
+  category?: string;
+  timing?: string;
 };
 
 function normalizeString(value?: string) {
@@ -80,9 +82,42 @@ class EventService {
   async getEvents(filters: EventFiltersDTO) {
     const limit = parseInteger(filters.limit, 10);
     const offset = parseInteger(filters.offset, 0);
+    const category = normalizeString(filters.category);
+    const timing = normalizeString(filters.timing)?.toLowerCase();
+
+    if (!category && !timing) {
+      throw new AppError("At least one of category or timing is required", HTTP_STATUS.BAD_REQUEST);
+    }
+
+    if (timing && !["today", "upcoming"].includes(timing)) {
+      throw new AppError("Timing must be either today or upcoming", HTTP_STATUS.BAD_REQUEST);
+    }
+
+    const where: Record<string, unknown> = {};
+
+    if (category) {
+      where.category = category;
+    }
+
+    if (timing) {
+      const today = new Date();
+      const startOfToday = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate()));
+      const startOfTomorrow = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate() + 1));
+
+      where.eventDate =
+        timing === "today"
+          ? {
+              gte: startOfToday,
+              lt: startOfTomorrow
+            }
+          : {
+              gte: startOfTomorrow
+            };
+    }
 
     const [events, total] = await Promise.all([
       prisma.event.findMany({
+        where,
         orderBy: { createdAt: "desc" },
         take: limit,
         skip: offset,
@@ -108,7 +143,9 @@ class EventService {
           }
         }
       }),
-      prisma.event.count()
+      prisma.event.count({
+        where
+      })
     ]);
 
     return {
@@ -118,7 +155,9 @@ class EventService {
         total,
         limit,
         offset,
-        locationFilter: null
+        locationFilter: null,
+        category: category ?? null,
+        timing: timing ?? null
       }
     };
   }
@@ -160,107 +199,6 @@ class EventService {
     return {
       success: true,
       data: event
-    };
-  }
-
-  async getEventsByCategory(category?: string) {
-    const normalizedCategory = normalizeString(category);
-
-    if (!normalizedCategory) {
-      throw new AppError("Category is required", HTTP_STATUS.BAD_REQUEST);
-    }
-
-    const events = await prisma.event.findMany({
-      where: {
-        category: normalizedCategory
-      },
-      orderBy: { createdAt: "desc" },
-      select: {
-        id: true,
-        creatorId: true,
-        category: true,
-        title: true,
-        description: true,
-        eventAddress: true,
-        eventDate: true,
-        eventTime: true,
-        maxParticipants: true,
-        currentParticipants: true,
-        status: true,
-        createdAt: true,
-        creator: {
-          select: {
-            id: true,
-            username: true,
-            mobileNumber: true
-          }
-        }
-      }
-    });
-
-    return {
-      success: true,
-      data: events
-    };
-  }
-
-  async getEventsByTiming(timing?: string) {
-    const normalizedTiming = normalizeString(timing)?.toLowerCase();
-
-    if (!normalizedTiming || !["today", "upcoming"].includes(normalizedTiming)) {
-      throw new AppError("Timing must be either today or upcoming", HTTP_STATUS.BAD_REQUEST);
-    }
-
-    const today = new Date();
-    const startOfToday = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate()));
-    const startOfTomorrow = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate() + 1));
-
-    const where =
-      normalizedTiming === "today"
-        ? {
-            eventDate: {
-              gte: startOfToday,
-              lt: startOfTomorrow
-            }
-          }
-        : {
-            eventDate: {
-              gte: startOfTomorrow
-            }
-          };
-
-    const events = await prisma.event.findMany({
-      where,
-      orderBy: { eventDate: "asc" },
-      select: {
-        id: true,
-        creatorId: true,
-        category: true,
-        title: true,
-        description: true,
-        eventAddress: true,
-        eventDate: true,
-        eventTime: true,
-        maxParticipants: true,
-        currentParticipants: true,
-        status: true,
-        createdAt: true,
-        creator: {
-          select: {
-            id: true,
-            username: true,
-            mobileNumber: true
-          }
-        }
-      }
-    });
-
-    return {
-      success: true,
-      data: events,
-      meta: {
-        timing: normalizedTiming
-      }
     };
   }
 

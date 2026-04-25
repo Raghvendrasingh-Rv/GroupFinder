@@ -2,5 +2,5 @@
   "watch": ["src"],
   "ext": "ts",
   "ignore": ["dist"],
-  "exec": "ts-node src/server.ts"
+  "exec": "TS_NODE_TRANSPILE_ONLY=true node --loader ts-node/esm --experimental-specifier-resolution=node src/server.ts"
 }

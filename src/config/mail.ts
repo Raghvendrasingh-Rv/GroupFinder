@@ -7,11 +7,6 @@ const resend = env.RESEND_API_KEY ? new Resend(env.RESEND_API_KEY) : null;
 
 export async function sendOtpEmail(to: string, otp: string) {
   if (!resend) {
-    if (env.NODE_ENV !== "production") {
-      console.log(`[OTP MOCK] Sent OTP ${otp} to ${to}`);
-      return;
-    }
-
     throw new AppError("RESEND_API_KEY is not configured", HTTP_STATUS.BAD_REQUEST);
   }
 
