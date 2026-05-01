@@ -35,10 +35,11 @@ async function sendWithGmail(to: string, otp: string) {
     throw new AppError("GMAIL_USER and GMAIL_APP_PASSWORD are required for gmail provider", HTTP_STATUS.BAD_REQUEST);
   }
 
-  const transporter = nodemailer.createTransport({
+  const transportOptions = {
     host: "smtp.gmail.com",
     port: 587,
     secure: false,
+    family: 4,
     auth: {
       user: env.GMAIL_USER,
       pass: env.GMAIL_APP_PASSWORD
@@ -50,7 +51,9 @@ async function sendWithGmail(to: string, otp: string) {
     connectionTimeout: 15000,
     greetingTimeout: 15000,
     socketTimeout: 15000
-  });
+  } as const;
+
+  const transporter = nodemailer.createTransport(transportOptions);
 
   const from = env.GMAIL_FROM ?? env.GMAIL_USER;
   const content = buildOtpContent(otp);
