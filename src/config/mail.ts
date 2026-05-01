@@ -12,6 +12,10 @@ function buildOtpContent(otp: string) {
   };
 }
 
+function normalizeGmailAppPassword(value: string) {
+  return value.replace(/\s+/g, "");
+}
+
 async function sendWithResend(to: string, otp: string) {
   if (!env.RESEND_API_KEY) {
     throw new AppError("RESEND_API_KEY is not configured", HTTP_STATUS.BAD_REQUEST);
@@ -35,6 +39,12 @@ async function sendWithGmail(to: string, otp: string) {
     throw new AppError("GMAIL_USER and GMAIL_APP_PASSWORD are required for gmail provider", HTTP_STATUS.BAD_REQUEST);
   }
 
+  const gmailAppPassword = normalizeGmailAppPassword(env.GMAIL_APP_PASSWORD);
+
+  if (!gmailAppPassword) {
+    throw new AppError("GMAIL_APP_PASSWORD is empty", HTTP_STATUS.BAD_REQUEST);
+  }
+
   const transportOptions = {
     host: "smtp.gmail.com",
     port: 587,
@@ -42,7 +52,7 @@ async function sendWithGmail(to: string, otp: string) {
     family: 4,
     auth: {
       user: env.GMAIL_USER,
-      pass: env.GMAIL_APP_PASSWORD
+      pass: gmailAppPassword
     },
     requireTLS: true,
     tls: {
@@ -58,11 +68,30 @@ async function sendWithGmail(to: string, otp: string) {
   const from = env.GMAIL_FROM ?? env.GMAIL_USER;
   const content = buildOtpContent(otp);
 
-  await transporter.sendMail({
-    from,
-    to,
-    ...content
-  });
+  try {
+    await transporter.sendMail({
+      from,
+      to,
+      ...content
+    });
+  } catch (error) {
+    const smtpError = error as { code?: string; message?: string };
+
+    console.error("[mail] Gmail send failed", {
+      to,
+      code: smtpError.code,
+      message: smtpError.message
+    });
+
+    if (smtpError.code === "EAUTH") {
+      throw new AppError(
+        "Gmail authentication failed. Check GMAIL_USER and GMAIL_APP_PASSWORD.",
+        HTTP_STATUS.UNAUTHORIZED
+      );
+    }
+
+    throw new AppError("Failed to send OTP email via Gmail", HTTP_STATUS.INTERNAL_SERVER_ERROR);
+  }
 
   console.log(`[mail] OTP sent via gmail to ${to}`);
 }
