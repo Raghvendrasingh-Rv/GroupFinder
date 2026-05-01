@@ -36,11 +36,20 @@ async function sendWithGmail(to: string, otp: string) {
   }
 
   const transporter = nodemailer.createTransport({
-    service: "gmail",
+    host: "smtp.gmail.com",
+    port: 587,
+    secure: false,
     auth: {
       user: env.GMAIL_USER,
       pass: env.GMAIL_APP_PASSWORD
-    }
+    },
+    requireTLS: true,
+    tls: {
+      minVersion: "TLSv1.2"
+    },
+    connectionTimeout: 15000,
+    greetingTimeout: 15000,
+    socketTimeout: 15000
   });
 
   const from = env.GMAIL_FROM ?? env.GMAIL_USER;
