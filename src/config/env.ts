@@ -34,9 +34,10 @@ const envSchema = z.object({
   EMAIL_PROVIDER: z.enum(["resend", "gmail"]).default("resend"),
   RESEND_API_KEY: z.preprocess(emptyStringToUndefined, z.string().optional()),
   RESEND_FROM: z.preprocess(emptyStringToUndefined, z.string().optional()),
-  GMAIL_USER: z.preprocess(emptyStringToUndefined, z.string().optional()),
-  GMAIL_APP_PASSWORD: z.preprocess(emptyStringToUndefined, z.string().optional()),
-  GMAIL_FROM: z.preprocess(emptyStringToUndefined, z.string().optional())
+  GMAIL_CLIENT_ID: z.preprocess(emptyStringToUndefined, z.string().optional()),
+  GMAIL_CLIENT_SECRET: z.preprocess(emptyStringToUndefined, z.string().optional()),
+  GMAIL_REFRESH_TOKEN: z.preprocess(emptyStringToUndefined, z.string().optional()),
+  GMAIL_SENDER_EMAIL: z.preprocess(emptyStringToUndefined, z.string().optional())
 });
 
 export const env = envSchema.parse(process.env);
