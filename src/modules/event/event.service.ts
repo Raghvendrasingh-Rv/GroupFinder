@@ -44,13 +44,22 @@ function normalizeTime(value?: string) {
 
 function toEventResponse<
   T extends {
-    participants?: Array<{ userId: string }>;
+    participants?: Array<{
+      userId: string;
+      user?: {
+        id: string;
+        username: string;
+      };
+    }>;
   }
 >(event: T) {
   const { participants = [], ...rest } = event;
   return {
     ...rest,
-    participants: participants.map((participant) => participant.userId)
+    participants: participants.map((participant) => ({
+      id: participant.user?.id ?? participant.userId,
+      username: participant.user?.username ?? ""
+    }))
   };
 }
 
@@ -109,7 +118,13 @@ class EventService {
         },
         participants: {
           select: {
-            userId: true
+            userId: true,
+            user: {
+              select: {
+                id: true,
+                username: true
+              }
+            }
           }
         }
       }
@@ -178,7 +193,13 @@ class EventService {
           },
           participants: {
             select: {
-              userId: true
+              userId: true,
+              user: {
+                select: {
+                  id: true,
+                  username: true
+                }
+              }
             }
           }
         }
@@ -231,7 +252,13 @@ class EventService {
         },
         participants: {
           select: {
-            userId: true
+            userId: true,
+            user: {
+              select: {
+                id: true,
+                username: true
+              }
+            }
           }
         }
       }
