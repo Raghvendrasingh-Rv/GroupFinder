@@ -156,7 +156,14 @@ const swaggerDefinition = {
           maxParticipants: { type: "integer" },
           currentParticipants: { type: "integer" },
           status: { type: "string" },
-          createdAt: { type: "string", format: "date-time" }
+          createdAt: { type: "string", format: "date-time" },
+          participants: {
+            type: "array",
+            items: {
+              type: "string",
+              example: "user-uuid"
+            }
+          }
         }
       },
       EventListResponse: {
@@ -250,7 +257,7 @@ const swaggerDefinition = {
                 }
               },
               event: { $ref: "#/components/schemas/EventResponse" }
-            }
+              }
           }
         }
       },

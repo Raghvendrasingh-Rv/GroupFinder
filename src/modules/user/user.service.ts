@@ -13,6 +13,7 @@ type CreateUserInput = {
 
 type UpdateProfileInput = {
   username?: string;
+  mobileNumber?: string;
   latitude?: number;
   longitude?: number;
 };
@@ -78,10 +79,11 @@ class UserService {
     }
 
     const username = input.username?.trim();
+    const mobileNumber = normalizeMobileNumber(input.mobileNumber);
     const latitude = input.latitude;
     const longitude = input.longitude;
 
-    if (!username && !isValidNumber(latitude) && !isValidNumber(longitude)) {
+    if (!username && !mobileNumber && !isValidNumber(latitude) && !isValidNumber(longitude)) {
       throw new AppError("At least one field is required", HTTP_STATUS.BAD_REQUEST);
     }
 
@@ -91,6 +93,7 @@ class UserService {
       where: { id },
       data: {
         ...(username ? { username } : {}),
+        ...(mobileNumber ? { mobileNumber } : {}),
         ...(isValidNumber(latitude) ? { latitude } : {}),
         ...(isValidNumber(longitude) ? { longitude } : {})
       }

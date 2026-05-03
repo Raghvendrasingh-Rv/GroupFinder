@@ -1,4 +1,3 @@
-import type { Event } from "@prisma/client";
 import { prisma } from "../../config/prisma.js";
 import { AppError } from "../../common/utils/AppError.js";
 import { HTTP_STATUS } from "../../common/utils/constants.js";
@@ -43,8 +42,20 @@ function normalizeTime(value?: string) {
   return trimmed.length > 0 ? trimmed : null;
 }
 
+function toEventResponse<
+  T extends {
+    participants?: Array<{ userId: string }>;
+  }
+>(event: T) {
+  const { participants = [], ...rest } = event;
+  return {
+    ...rest,
+    participants: participants.map((participant) => participant.userId)
+  };
+}
+
 class EventService {
-  async createEvent(input: CreateEventDTO): Promise<Event> {
+  async createEvent(input: CreateEventDTO) {
     const creatorId = normalizeString(input.creatorId);
     const category = normalizeString(input.category);
     const title = normalizeString(input.title);
@@ -65,7 +76,7 @@ class EventService {
       where: { id: creatorId }
     });
 
-    return prisma.event.create({
+    const event = await prisma.event.create({
       data: {
         creatorId,
         category,
@@ -75,8 +86,36 @@ class EventService {
         eventDate,
         eventTime,
         maxParticipants: input.maxParticipants
+      },
+      select: {
+        id: true,
+        creatorId: true,
+        category: true,
+        title: true,
+        description: true,
+        eventAddress: true,
+        eventDate: true,
+        eventTime: true,
+        maxParticipants: true,
+        currentParticipants: true,
+        status: true,
+        createdAt: true,
+        creator: {
+          select: {
+            id: true,
+            username: true,
+            mobileNumber: true
+          }
+        },
+        participants: {
+          select: {
+            userId: true
+          }
+        }
       }
     });
+
+    return toEventResponse(event);
   }
 
   async getEvents(filters: EventFiltersDTO) {
@@ -136,6 +175,11 @@ class EventService {
               username: true,
               mobileNumber: true
             }
+          },
+          participants: {
+            select: {
+              userId: true
+            }
           }
         }
       }),
@@ -146,7 +190,7 @@ class EventService {
 
     return {
       success: true,
-      data: events,
+      data: events.map(toEventResponse),
       meta: {
         total,
         limit,
@@ -184,6 +228,11 @@ class EventService {
             username: true,
             mobileNumber: true
           }
+        },
+        participants: {
+          select: {
+            userId: true
+          }
         }
       }
     });
@@ -194,7 +243,7 @@ class EventService {
 
     return {
       success: true,
-      data: event
+      data: toEventResponse(event)
     };
   }
 

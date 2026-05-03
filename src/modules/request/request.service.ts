@@ -5,6 +5,62 @@ import { HTTP_STATUS } from "../../common/utils/constants.js";
 import { assertEventOwner } from "../../common/utils/authorization.js";
 
 class RequestService {
+  async getPendingRequestsForEvent(eventId: string | undefined, actorId: string | undefined) {
+    if (!eventId) {
+      throw new AppError("Event ID is required", HTTP_STATUS.BAD_REQUEST);
+    }
+
+    if (!actorId) {
+      throw new AppError("Unauthorized", HTTP_STATUS.UNAUTHORIZED);
+    }
+
+    const event = await prisma.event.findUnique({
+      where: { id: eventId },
+      select: {
+        id: true,
+        creatorId: true,
+        title: true,
+        category: true,
+        createdAt: true
+      }
+    });
+
+    assertEventOwner(event, actorId);
+
+    const requests = await prisma.request.findMany({
+      where: {
+        eventId,
+        status: "PENDING"
+      },
+      orderBy: {
+        createdAt: "desc"
+      },
+      select: {
+        id: true,
+        status: true,
+        createdAt: true,
+        user: {
+          select: {
+            id: true,
+            username: true,
+            email: true,
+            mobileNumber: true,
+            createdAt: true
+          }
+        }
+      }
+    });
+
+    return {
+      success: true,
+      message: "Pending requests fetched successfully",
+      data: {
+        event,
+        requests
+      }
+    };
+  }
+
   async sendJoinRequest(eventId: string | undefined, userId: string | undefined) {
     if (!eventId) {
       throw new AppError("Event ID is required", HTTP_STATUS.BAD_REQUEST);
@@ -92,7 +148,7 @@ class RequestService {
         data: { status: "ACCEPTED" }
       });
 
-      const updatedEvent = await tx.event.update({
+      await tx.event.update({
         where: { id: event.id },
         data: {
           currentParticipants: {
@@ -108,12 +164,42 @@ class RequestService {
         }
       });
 
+      const updatedEventWithParticipants = await tx.event.findUniqueOrThrow({
+        where: { id: event.id },
+        select: {
+          id: true,
+          creatorId: true,
+          category: true,
+          title: true,
+          description: true,
+          eventAddress: true,
+          eventDate: true,
+          eventTime: true,
+          maxParticipants: true,
+          currentParticipants: true,
+          status: true,
+          createdAt: true,
+          creator: {
+            select: {
+              id: true,
+              username: true,
+              mobileNumber: true
+            }
+          },
+          participants: {
+            select: {
+              userId: true
+            }
+          }
+        }
+      });
+
       return {
         success: true,
         message: "Request accepted successfully",
         data: {
           request: updatedRequest,
-          event: updatedEvent
+          event: updatedEventWithParticipants
         }
       };
     });

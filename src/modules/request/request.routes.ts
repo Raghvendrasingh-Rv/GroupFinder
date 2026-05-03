@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { authMiddleware } from "../../common/middleware/auth.middleware.js";
-import { acceptRequest, rejectRequest, sendJoinRequest } from "./request.controller.js";
+import { acceptRequest, getPendingRequestsForEvent, rejectRequest, sendJoinRequest } from "./request.controller.js";
 
 export const requestRouter = Router();
 
@@ -31,6 +31,28 @@ requestRouter.use(authMiddleware);
 requestRouter.post("/events/:id/request", sendJoinRequest);
 /**
  * @openapi
+ * /events/{eventId}/manage-requests:
+ *   get:
+ *     summary: Get pending requests for an event
+ *     tags:
+ *       - Requests
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: eventId
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Pending requests fetched successfully
+ *       403:
+ *         description: Forbidden
+ */
+requestRouter.get("/events/:eventId/manage-requests", getPendingRequestsForEvent);
+/**
+ * @openapi
  * /requests/{id}/accept:
  *   post:
  *     summary: Accept request
@@ -52,6 +74,7 @@ requestRouter.post("/events/:id/request", sendJoinRequest);
  *             schema:
  *               $ref: '#/components/schemas/ProcessRequestResponse'
  */
+requestRouter.post("/requests/:id/accept", acceptRequest);
 requestRouter.post("/:id/accept", acceptRequest);
 /**
  * @openapi
@@ -76,4 +99,5 @@ requestRouter.post("/:id/accept", acceptRequest);
  *             schema:
  *               $ref: '#/components/schemas/ProcessRequestResponse'
  */
+requestRouter.post("/requests/:id/reject", rejectRequest);
 requestRouter.post("/:id/reject", rejectRequest);
